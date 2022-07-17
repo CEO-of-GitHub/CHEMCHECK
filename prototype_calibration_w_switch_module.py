@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import os.path
 
 # Pins for TCS3200 Color Sensor
 
@@ -211,12 +212,10 @@ def colorRead_FULL(RAWval, RAW_1, RAW_2, RGB_1, RGB_2):
     return RGBlist
 
 def checkConfig():
-    try:
-        f = open("config.txt","r")
-    except FileNotFoundError:
-        return 0
-    else:
-        return 1
+    if os.path.exists("config.txt") == True:
+      return 1
+    elif os.path.exists("config.txt") == False:
+      return 0
 
 def saveConfig():
     global calibrationValues
