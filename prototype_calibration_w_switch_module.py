@@ -223,14 +223,20 @@ def checkConfig():
 
 def saveConfig():
     global calibrationValues
-    f = open("config.txt","w")
-    f.write(calibrationValues)
+    f = open("config.txt","a")
+    f.seek(0)
+    for group in calibrationValues:
+           for item in calibrationValues[group]:
+                      f.write(str(calibrationValues[group][item]) + " ")
+           f.write("\n")
     f.close()
 
 def loadConfig():
     global calibrationValues
     f = open("config.txt","r")
-    calibrationValues = f.read()
+    calibrationValues = f.splitlines()
+    for i in calibrationValues:
+           calibrationValues[i] = f.split()
     f.close()
 
 def endprogram():
