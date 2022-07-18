@@ -72,7 +72,7 @@ def loop():
                 while(True):
                     pick2 = selectMODE()
                     if pick2 == 0:
-                        print("ambatukam ambadeblou ambasing ambatunat omaygot\n\n")
+                        print("Attempt to load \"config.txt\" cancelled.\n\n")
                         break
                     if pick2 == 1:
                         saveConfig()
@@ -186,12 +186,16 @@ def colorReadRAW(s2val,s3val):
     GPIO.output(s2,s2val)
     GPIO.output(s3,s3val)
     
-    start = time.time()
-    for impulse_count in range(NUM_CYCLES):
-      GPIO.wait_for_edge(signal, GPIO.FALLING)
-    duration = time.time() - start
-    result_value = NUM_CYCLES / duration
-    return result_value    
+    reps = 10
+    result_values
+    for i in range(reps):
+           start = time.time()
+           for impulse_count in range(NUM_CYCLES):
+                      GPIO.wait_for_edge(signal, GPIO.FALLING)
+           duration = time.time() - start
+           result_value = NUM_CYCLES / duration
+           result_values += result_value
+    return result_values / reps
     
 def colorReadRAW_FULL():
     red = colorReadRAW(GPIO.LOW,GPIO.LOW)
