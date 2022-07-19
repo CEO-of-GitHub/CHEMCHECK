@@ -54,7 +54,7 @@ def setup():
 def loop():
     global calibrationValues
     temp = 1
-    print("CHOOSE OPERATION\nPress A: Color Calibration\nPress B: Color Sensing\nPress C: SAVE Current Calibration Config\nPress D: LOAD Latest Calibration Config")
+    print("CHOOSE OPERATION\nPress A: Color Calibration\nPress B: Color Sensing\nPress C: SAVE Current Calibration Config\nPress D: LOAD Latest Calibration Config\n\n")
     while(1): 
         pick = selectMODE()
         if pick == 'A':
@@ -94,11 +94,11 @@ def loop():
                             print("Attempt to load \"config.txt\" cancelled.\n\n")
                             break
                         if pick3 == 1:
-                            saveConfig()
+                            print(loadConfig())
                             print("Loaded \"config.txt\" successfully!\n\n")
                             break
                 elif not calibrationValues:
-                    loadConfig()
+                    print(loadConfig())
             elif checkConfig() == 0:
                 print("Config file \"config.txt\" does not exist!\n\n")
         else:
@@ -122,25 +122,26 @@ def calibrationMODE():
     time.sleep(5)
     
     # Calibrate for (255,0,0), (0,255,0), and (0,0,255)
-    print("Provide RGB model for RED (255,0,0) in 5 seconds")
-    time.sleep(5)
+    print("Provide RGB model for RED (255,0,0) in 3 seconds")
+    time.sleep(3)
     red_high = colorCalibrate(GPIO.LOW,GPIO.LOW,'R',255)
-    print("Provide RGB model for GREEN (0,255,0) in 5 seconds")
-    time.sleep(5)
+    print("Provide RGB model for GREEN (0,255,0) in 3 seconds")
+    time.sleep(3)
     green_high = colorCalibrate(GPIO.HIGH,GPIO.HIGH,'G',255)
-    print("Provide RGB model for BLUE (0,0,255) in 5 seconds")
-    time.sleep(5)
+    print("Provide RGB model for BLUE (0,0,255) in 3 seconds")
+    time.sleep(3)
     blue_high = colorCalibrate(GPIO.LOW,GPIO.HIGH,'B',255)
     
     # Calibrate for (0,0,0)
-    print("Provide RGB model for BLACK (0,0,0) in 5 seconds")
-    time.sleep(5)
+    print("Provide RGB model for BLACK (0,0,0) in 3 seconds")
+    time.sleep(3)
     red_low = colorCalibrate(GPIO.LOW,GPIO.LOW,'R',0)
     green_low = colorCalibrate(GPIO.HIGH,GPIO.HIGH,'G',0)
     blue_low = colorCalibrate(GPIO.LOW,GPIO.HIGH,'B',0)
     
     calibrationValues = [[red_low, green_low, blue_low], [red_high, green_high, blue_high]]
     print("\nCalibration done!\n\n")
+    print(calibrationValues)
     
     return calibrationValues
 
@@ -190,7 +191,7 @@ def colorReadRAW(s2val,s3val):
     GPIO.output(s3,s3val)
     
     reps = 10
-    result_values
+    result_values = 0
     for i in range(reps):
            start = time.time()
            for impulse_count in range(NUM_CYCLES):
@@ -199,6 +200,7 @@ def colorReadRAW(s2val,s3val):
            result_value = NUM_CYCLES / duration
            result_values += result_value
     return result_values / reps
+    # This is a mean-based calibration process. It might take 10 times longer but it will hopefully be more acurate.
     
 def colorReadRAW_FULL():
     red = colorReadRAW(GPIO.LOW,GPIO.LOW)
@@ -237,10 +239,16 @@ def saveConfig():
 def loadConfig():
     global calibrationValues
     f = open("config.txt","r")
-    calibrationValues = f.splitlines()
-    for i in calibrationValues:
-           calibrationValues[i] = f.split()
+    txt = f.read()
+    calibrationValuesSTR = txt.splitlines(False)
+    for group in range(len(calibrationValuesSTR)):
+        calibrationValuesSUBSTR = calibrationValuesSTR[group].split()
+        calibrationValuesSUB = []
+        for item in range(len(calibrationValuesSUBSTR)):
+            calibrationValuesSUB.append(calibrationValuesSUBSTR[item])
+        calibrationValues.append(calibrationValuesSUB)
     f.close()
+    return calibrationValues
 
 def endprogram():
     GPIO.cleanup()
@@ -254,7 +262,6 @@ if __name__=='__main__':
 
     except KeyboardInterrupt:
         endprogram()
-
 
 
 
