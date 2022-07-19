@@ -67,20 +67,23 @@ def loop():
                 print("R: " + str(RGBval[nRED]) + "     G: " + str(RGBval[nGREEN]) + "     B: " + str(RGBval[nBLUE]))
                 print("\n\n")
         elif pick == 'C':
-            if checkConfig() == 1:
-                print("Saving current calibration config will override the previous one. Do you wish to continue? (0-no,1-yes)")
-                while(True):
-                    pick2 = selectMODE()
-                    if pick2 == 0:
-                        print("Attempt to load \"config.txt\" cancelled.\n\n")
-                        break
-                    if pick2 == 1:
-                        saveConfig()
-                        print("Saved current calibration config!\n\n")
-                        break
-            elif checkConfig() == 0:
-                saveConfig()
-                print("Saved current calibration config!\n\n")
+            if not calibrationValues:
+                print("There are no calibration values set for saving. Please perform the color calibration process first.\n\n")
+            elif calibrationValues:
+                if checkConfig() == 1:
+                    print("Saving current calibration config will override the previous one. Do you wish to continue? (0-no,1-yes)")
+                    while(True):
+                        pick2 = selectMODE()
+                        if pick2 == 0:
+                            print("Attempt to save calibration config cancelled.\n\n")
+                            break
+                        if pick2 == 1:
+                            saveConfig()
+                            print("Saved current calibration config!\n\n")
+                            break
+                elif checkConfig() == 0:
+                    saveConfig()
+                    print("Saved current calibration config!\n\n")
         elif pick == 'D':
             if checkConfig() == 1:
                 if calibrationValues:
@@ -88,7 +91,7 @@ def loop():
                     while(True):
                         pick3 = selectMODE()
                         if pick3 == 0:
-                            print("ambatukam ambadeblou ambasing ambatunat omaygot\n\n")
+                            print("Attempt to load \"config.txt\" cancelled.\n\n")
                             break
                         if pick3 == 1:
                             saveConfig()
