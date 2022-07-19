@@ -135,11 +135,15 @@ def calibrationMODE():
     # Calibrate for (0,0,0)
     print("Provide RGB model for BLACK (0,0,0) in 3 seconds")
     time.sleep(3)
+    print("\n0/3\n")
     red_low = colorCalibrate(GPIO.LOW,GPIO.LOW,'R',0)
+    print("\n1/3\n")
     green_low = colorCalibrate(GPIO.HIGH,GPIO.HIGH,'G',0)
+    print("\n2/3\n")
     blue_low = colorCalibrate(GPIO.LOW,GPIO.HIGH,'B',0)
+    print("\n3/3\n")
     
-    calibrationValues = [[red_low, green_low, blue_low], [red_high, green_high, blue_high]]
+    calibrationValues = [[int(red_low), int(green_low), int(blue_low)], [int(red_high), int(green_high), int(blue_high)]]
     print("\nCalibration done!\n\n")
     print(calibrationValues)
     
@@ -230,8 +234,8 @@ def saveConfig():
     global calibrationValues
     f = open("config.txt","a")
     f.seek(0)
-    for group in calibrationValues:
-           for item in calibrationValues[group]:
+    for group in range(len(calibrationValues)):
+           for item in range(len(calibrationValues[group])):
                       f.write(str(calibrationValues[group][item]) + " ")
            f.write("\n")
     f.close()
